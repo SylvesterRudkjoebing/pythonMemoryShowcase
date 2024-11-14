@@ -21,7 +21,7 @@ def main():
     target_name = input("Name: ")
 
     # Calculate how you met your friends
-    bfs.calculate(target_name)
+    relations = bfs.calculate(target_name)
 
     # Close the SQLite database connection
     db.close()
@@ -31,7 +31,7 @@ def main():
     llm.load_model()
 
     # Calculates and print reply based on input. Takes a very long time, since it's a local llm, depending on your CPU/GPU.
-    print(llm.communicate("How many fingers are on 2 hands?", 20))
+    print(llm.communicate("På 3 linjer, skriv disse vennehistorier: " + ", ".join(relations), 30))
 
 if __name__ == "__main__":
     main()

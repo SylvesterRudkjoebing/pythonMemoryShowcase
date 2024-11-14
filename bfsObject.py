@@ -226,12 +226,20 @@ class bfsObject:
             degrees = len(path)
             print(f"{degrees} degrees of separation.")
             path = [(None, source)] + path
+            relations = []
             for i in range(degrees):
                 person1 = self.people[path[i][1]]["name"]
                 person2 = self.people[path[i + 1][1]]["name"]
                 event = self.events[path[i + 1][0]]["event"]
                 if i == 0:
-                    print(f"{i + 1}: Du og {person2} mødtes {event}")
+                    relation = f"{i + 1}: Du og {person2} mødtes {event}"
                 else:
-                    print(f"{i + 1}: {person1} introducerede {person2} til dig {event}")
+                    relation = f"{i + 1}: {person1} introducerede dig til {person2} {event}"
+                print(relation)
+                relations.append(relation)
+
+        return relations
+
+
+
 
