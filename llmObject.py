@@ -1,7 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 class llmObject:
-    def __init__(self, path="/Users/sylvesterrudkjobing/Python projekter/showcaseAutobiographicalMemory/Llama-3.2-1B"):
+    def __init__(self, path="/Users/sylvesterrudkjobing/Python projekter/Llama-3.2-1B"):
         self.path = path
         self.pipe = None
 
@@ -14,8 +14,9 @@ class llmObject:
     def communicate(self, question, max_tokens=100):
         print(self.pipe(question, max_new_tokens=max_tokens)[0]["generated_text"])
 
-# Til eksperimentering
-# path="/Users/sylvesterrudkjobing/Python projekter/showcaseAutobiographicalMemory/Llama-3.2-1B"
+# Til eksperimentering:
+
+# path="/Users/sylvesterrudkjobing/Python projekter/Llama-3.2-1B"
 
 # pipe = pipeline(
 #             "text-generation",

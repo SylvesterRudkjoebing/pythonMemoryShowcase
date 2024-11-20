@@ -17,11 +17,11 @@ def main():
     # Creates BFS object
     bfs = bfsObject.bfsObject(db.conn)
 
-    # Sets source and target name
-    target_name = input("Name: ")
+    # Sets target friend name
+    friend_name = input("Name: ")
 
     # Calculate how you met your friends
-    relations = bfs.calculate(target_name)
+    relations = bfs.calculate(friend_name)
 
     # Close the SQLite database connection
     db.close()
@@ -31,7 +31,7 @@ def main():
     llm.load_model()
 
     # Calculates and print reply based on input. Takes a very long time, since it's a local llm, depending on your CPU/GPU.
-    print(llm.communicate("På 3 linjer, skriv disse vennehistorier: " + ", ".join(relations), 30))
+    print(llm.communicate("På 3 linjer, skriv disse vennehistorier: " + ", ".join(relations), 300))
 
 if __name__ == "__main__":
     main()

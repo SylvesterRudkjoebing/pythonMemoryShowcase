@@ -1,0 +1,19 @@
+{% extends "memoryAPI/layout.html" %}
+
+{% block body %}
+    <ul>
+        {% for mem in mems %}
+        <li>{{mem}}</li>
+        {% empty %}
+        <li>No memories at the moment</li>
+        {% endfor %}
+    </ul>
+    <form action="{% url 'memoryAPI:memory' %}" method="post">
+        {% csrf_token %}
+        {{ memory }}
+        <input type="submit">
+    </form>
+    <a href="{% url "memoryAPI:index" %}">Go to index!</a>
+
+
+{% endblock %}
