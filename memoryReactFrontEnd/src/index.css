@@ -16,3 +16,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', 
   monospace;
 }
+
+.App {
+  padding: 2rem; /* Increase padding for larger screens */
+}
+
+svg {
+  display: block;  /* Block element so it respects the width of its parent container */
+  max-width: 100%;  /* Ensures the SVG fits within the available width */
+  margin: 0 auto;   /* Centers the SVG */
+}
+
+.bg-white {
+  max-width: 800px; /* Limit overall card width */
+  overflow: visible; /* Prevent cutting off of the SVG */
+}

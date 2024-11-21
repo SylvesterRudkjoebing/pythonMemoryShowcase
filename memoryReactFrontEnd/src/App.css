@@ -40,3 +40,31 @@
     transform: rotate(360deg);
   }
 }
+
+svg {
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: block;  /* Block element so it respects the width of its parent container */
+  max-width: 100%;  /* Ensures the SVG fits within the available width */
+  max-height: 100%;
+  margin: 0 auto;   /* Centers the SVG */
+}
+
+circle {
+  transition: transform 0.2s ease-in-out;
+}
+
+circle:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+text {
+  font-family: "Arial", sans-serif;
+}
+
+.bg-white {
+  max-width: 800px; /* Limit overall card width */
+  overflow: visible; /* Prevent cutting off of the SVG */
+}

@@ -64,6 +64,7 @@ class LLMRequest(BaseModel):
 
 @app.post("/contextualize-associations/")
 def contextualize_relations(request: LLMRequest):
-    prompt = "På 3 linjer, skriv disse vennehistorier: " + ", ".join(request.associations)
-    response = llm.communicate(prompt, max_tokens=25)
+    # prompt = "På 3 linjer, skriv disse vennehistorier: " + ", ".join(request.associations)
+    prompt = ", ".join(request.associations)
+    response = llm.communicate(prompt, max_tokens=5)
     return {"summary": response}
