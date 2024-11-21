@@ -10,7 +10,7 @@ class MemoryDB:
         :param db_filename: Name of the SQLite database file (default is 'MemoryDB.db')
         """
         self.db_filename = db_filename
-        self.conn = sqlite3.connect(self.db_filename)  # Connect to the SQLite database file
+        self.conn = sqlite3.connect(self.db_filename, check_same_thread=False)  # Connect to the SQLite database file
         print(f"Connected to SQLite database '{self.db_filename}'.")
 
     def load_csv(self, file_path):
@@ -65,6 +65,16 @@ class MemoryDB:
                 print(f"Table '{table_name}' already exists. Skipping data insertion.")
 
         print("Seeding completed.")
+
+    def get_all_people(self):
+        """
+        Fetch all people's names from the 'people' table.
+        
+        :return: List of names from the rows of the 'people' table
+        """
+        query = "SELECT name FROM people"
+        rows = self.conn.execute(query).fetchall()
+        return [{"name": row[0]} for row in rows]
 
     def query(self, query):
         """

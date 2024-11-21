@@ -31,7 +31,7 @@ def main():
     llm.load_model()
 
     # Calculates and print reply based on input. Takes a very long time, since it's a local llm, depending on your CPU/GPU.
-    print(llm.communicate("På 3 linjer, skriv disse vennehistorier: " + ", ".join(relations), 300))
+    print(llm.communicate("På 3 linjer, fortæl historien omkring følgende møder: " + ", ".join(relations), 25))
 
 if __name__ == "__main__":
     main()

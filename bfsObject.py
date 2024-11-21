@@ -198,9 +198,7 @@ class bfsObject:
         """
         Main function to calculate the shortest path.
         """
-        if len(sys.argv) > 2:
-            sys.exit("Usage: python degrees.py [database]")
-        database = sys.argv[1] if len(sys.argv) == 2 else "MemoryDB.db"
+        database = "MemoryDB.db"
 
         # Load data from database into memory
         print("Loading data...")
@@ -232,9 +230,9 @@ class bfsObject:
                 person2 = self.people[path[i + 1][1]]["name"]
                 event = self.events[path[i + 1][0]]["event"]
                 if i == 0:
-                    relation = f"{i + 1}: Du og {person2} mødtes {event}"
+                    relation = f"Du og {person2} mødtes {event}"
                 else:
-                    relation = f"{i + 1}: {person1} introducerede dig til {person2} {event}"
+                    relation = f"{person1} introducerede dig til {person2} {event}"
                 print(relation)
                 relations.append(relation)
 
