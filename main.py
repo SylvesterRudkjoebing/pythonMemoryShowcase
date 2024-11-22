@@ -1,4 +1,3 @@
-import sys
 import dbObject
 import bfsObject
 import llmObject
@@ -18,7 +17,8 @@ def main():
     bfs = bfsObject.bfsObject(db.conn)
 
     # Sets target friend name
-    friend_name = input("Name: ")
+    # friend_name = input("Name: ")
+    friend_name = "Den introverte Assembly-programmør"
 
     # Calculate how you met your friends
     relations = bfs.calculate(friend_name)
@@ -31,7 +31,7 @@ def main():
     llm.load_model()
 
     # Calculates and print reply based on input. Takes a very long time, since it's a local llm, depending on your CPU/GPU.
-    print(llm.communicate("På 3 linjer, fortæl historien omkring følgende møder: " + ", ".join(relations), 25))
+    print(llm.communicate("På 3 linjer, fortæl historien omkring følgende møder: " + ", ".join(relations), 5))
 
 if __name__ == "__main__":
     main()

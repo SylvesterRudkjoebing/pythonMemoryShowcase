@@ -6,8 +6,10 @@ function App() {
   const [people, setPeople] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState("");
   const [associations, setAssociations] = useState([]);
-  const [summary, setSummary] = useState("");
+  const [summary, setSummary] = useState(""); // Reset summary on new friend selection
+  const [degrees, setDegrees] = useState(0); // Add degrees state
   const [loading, setLoading] = useState(false);
+  const [hasClickedAssociate, setHasClickedAssociate] = useState(false); // Track if "Associer" was clicked
 
   useEffect(() => {
     axios
@@ -20,10 +22,20 @@ function App() {
       });
   }, []);
 
+  // Reset graph and summary when a new friend is selected
+  const handleSelectPerson = (newPerson) => {
+    setSelectedPerson(newPerson);
+    setAssociations([]); // Clear associations to hide the graph
+    setDegrees(0); // Reset degrees
+    setHasClickedAssociate(false); // Mark as not associated yet
+    setSummary(""); // Clear the summary
+  };
+
   const handleCalculateAssociations = async () => {
     if (!selectedPerson) return;
 
     setLoading(true);
+    setHasClickedAssociate(true); // Mark that the user has clicked "Associer"
 
     try {
       const response = await axios.post(
@@ -32,11 +44,13 @@ function App() {
           target_name: selectedPerson,
         }
       );
+      setDegrees(response.data.degrees); // Set the degrees value
       setAssociations(response.data.associations); // Set the associations data
       setSummary(""); // Clear the summary when recalculating
     } catch (error) {
       console.error("There was an error calculating the associations!", error);
       setAssociations([]);
+      setDegrees(0);
     }
 
     setLoading(false);
@@ -77,11 +91,13 @@ function App() {
           </label>
           <select
             id="personSelect"
-            onChange={(e) => setSelectedPerson(e.target.value)}
+            onChange={(e) => handleSelectPerson(e.target.value)} // Handle select person
             value={selectedPerson}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value=""></option>
+            {/* Only show the placeholder option when no person is selected */}
+            <option value="" disabled={selectedPerson !== ""}>Venner</option>
+
             {people.map((person, index) => (
               <option key={index} value={person}>
                 {person}
@@ -98,20 +114,23 @@ function App() {
           {loading ? "Associerer..." : "Associer"}
         </button>
 
-        {associations.length > 0 && (
+        {/* Render AssociationsPath only after "Associer" is clicked */}
+        {hasClickedAssociate && (
           <div className="mt-6">
             <AssociationsPath 
               associations={associations} 
-              selectedPerson={selectedPerson} // Pass the selected person to AssociationsPath
+              selectedPerson={selectedPerson} 
+              degrees={degrees} 
             />
-            {/* Remove the default margin-bottom or adjust if needed */}
-            <button
-              onClick={handleContextualizeAssociations}
-              disabled={loading}
-              className="w-full mt-4 p-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 disabled:opacity-50"
-            >
-              {loading ? "Husker..." : "Aktiver autobiografisk hukommelse"}
-            </button>
+            {associations.length > 0 && (
+              <button
+                onClick={handleContextualizeAssociations}
+                disabled={loading}
+                className="w-full mt-4 p-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 disabled:opacity-50"
+              >
+                {loading ? "Husker..." : "Aktiver autobiografisk hukommelse"}
+              </button>
+            )}
           </div>
         )}
 

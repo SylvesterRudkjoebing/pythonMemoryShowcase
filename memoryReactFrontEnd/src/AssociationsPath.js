@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
-const AssociationsPath = ({ associations, selectedPerson }) => {
+const AssociationsPath = ({ associations, selectedPerson, degrees }) => {
+  // If there are no associations and degrees is 0, display the custom message
+  if ((!associations || associations.length === 0) && degrees === 0) {
+    return <p className="text-center text-gray-700">Nobody knows this legend.</p>;
+  }
   if (!associations || associations.length === 0) {
     return <p>No associations available to display.</p>;
   }

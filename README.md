@@ -2,7 +2,7 @@
 
 This repository showcases my ability to integrate Data Science with Full-Stack Development using Python and React.
 
-The core of this project is a FastAPI-based application that simulates human autobiographical memory. It leverages several key components:
+The core of this project is a FastAPI-based RESTful API that simulates human autobiographical memory. It leverages several key components:
 
 1. **Associations** – Implemented with a **breadth-first search (BFS)** algorithm to identify the shortest connection paths between friends.
 2. **Episodic Memory** – Stored in an "Events" database table, providing event descriptions to simulate memory recall.

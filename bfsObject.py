@@ -220,6 +220,7 @@ class bfsObject:
 
         if path is None:
             print("Not connected.")
+            relations = []
         else:
             degrees = len(path)
             print(f"{degrees} degrees of separation.")
