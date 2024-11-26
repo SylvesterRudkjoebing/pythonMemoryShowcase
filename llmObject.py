@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import pipeline
 
 class llmObject:
     def __init__(self, path="../Llama-3.2-1B"):
