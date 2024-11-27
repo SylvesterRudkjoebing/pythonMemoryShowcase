@@ -1,8 +1,56 @@
-{% extends "memoryAPI/layout.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Rows</title>
+</head>
+<body>
+    <h1>All Rows in Table</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Birth</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in prows %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.birth }}</td>
+                <!-- Add more fields as necessary -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-{% block body %}
-    <body>
-        <h1>Hello, recaller!</h1>
-    </body>
-    <a href="{% url "memoryAPI:memory" %}">Go to memories!</a>
-{% endblock %}
+    <!-- Add New Person Form -->
+    <h2>Add a New Person</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Person</button>
+    </form>
+
+    <h2>Events</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Event</th>
+                <th>Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in erows %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.event }}</td>
+                <td>{{ row.year }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

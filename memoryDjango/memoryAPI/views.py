@@ -1,7 +1,10 @@
 from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from memoryAPI.models import *
+from .forms import PersonForm
+
 
 # AVOID HARDCODING URLS. DIRECT TO LIST OF URLS AND CATCH THE NAME.
 
@@ -10,7 +13,23 @@ class NewMemoryForm(forms.Form):
 
 # Create your views here.
 def index(request):
-    return render(request, "memoryAPI/index.html")
+    prows = Person.objects.all()
+    erows = Event.objects.all()
+
+    if request.method == "POST":
+        form = PersonForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('memoryAPI:index')
+        else:
+            print("Form errors:", form.errors)  # Print form errors for debugging
+    else:
+        form = PersonForm()
+
+    return render(request, 'memoryAPI/index.html', {
+        'prows': prows, 'erows': erows, 'form': form
+    })
+
 
 def memory(request):
     if "mems" not in request.session:

@@ -16,9 +16,11 @@ Including another URLconf
 """
 
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import include, path
 
 urlpatterns = [
+    path('', lambda request: redirect('memoryAPI:index')),  # Redirect to your index view
     path("admin/", admin.site.urls),
     path('memoryAPI/', include("memoryAPI.urls")) # Det overordnede django-projekt "memoryDjango" indeholder forskellige apps/services, her URLs fra "memoryAPI"
 ]
