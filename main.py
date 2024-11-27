@@ -7,7 +7,7 @@ def main(db, bfs, llm):
     db.seedMemories()
 
     # Query example
-    query_result = db.query('SELECT name FROM people')
+    query_result = db.query('SELECT id FROM people')
     print(query_result)
 
     # Sets target friend name

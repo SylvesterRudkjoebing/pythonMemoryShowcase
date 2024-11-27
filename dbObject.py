@@ -75,6 +75,55 @@ class MemoryDB:
         query = "SELECT name FROM people"
         rows = self.conn.execute(query).fetchall()
         return [{"name": row[0]} for row in rows]
+    
+    def create_person(self, id, name, birth):
+        """
+        Adds a new person to the 'people' table.
+        """
+        query = "INSERT INTO people (id, name, birth) VALUES (?, ?, ?)"
+        self.conn.execute(query, (id, name, birth))
+        self.conn.commit()
+        print(f"Added person: {id} {name} ({birth})")
+
+    def get_person(self, person_id):
+        """
+        Fetches a person's details by ID.
+        """
+        query = "SELECT * FROM people WHERE id = ?"
+        result = self.conn.execute(query, (person_id,)).fetchone()
+        if result:
+            return {"id": result[0], "name": result[1], "birth": result[2]}
+        return None
+    
+    def update_person(self, person_id, name=None, birth=None):
+        """
+        Updates a person's details in the database.
+        """
+        updates = []
+        values = []
+        
+        if name:
+            updates.append("name = ?")
+            values.append(name)
+        if birth:
+            updates.append("birth = ?")
+            values.append(birth)
+        
+        if updates:
+            values.append(person_id)
+            query = f"UPDATE people SET {', '.join(updates)} WHERE id = ?"
+            self.conn.execute(query, values)
+            self.conn.commit()
+            print(f"Updated person with ID: {person_id}")
+
+    def delete_person(self, person_id):
+        """
+        Deletes a person from the database by ID.
+        """
+        query = "DELETE FROM people WHERE id = ?"
+        self.conn.execute(query, (person_id,))
+        self.conn.commit()
+        print(f"Deleted person with ID: {person_id}")
 
     def query(self, query):
         """

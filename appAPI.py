@@ -42,6 +42,43 @@ def get_people():
         raise HTTPException(status_code=404, detail="No people found.")
     return {"people": [person["name"] for person in people]}  # List of names
 
+class PersonCreateRequest(BaseModel):
+    id: int
+    name: str
+    birth: str
+
+@app.post("/people/")
+def add_person(person: PersonCreateRequest):
+    try:
+        db.create_person(person.id, person.name, person.birth)
+        return {"message": "Person added successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/people/{person_id}")
+def read_person(person_id: int):
+    person = db.get_person(person_id)
+    if not person:
+        raise HTTPException(status_code=404, detail="Person not found")
+    return person
+
+@app.put("/people/{person_id}")
+def update_person(person_id: int, name: str = None, birth: str = None):
+    try:
+        db.update_person(person_id, name, birth)
+        return {"message": "Person updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/people/{person_id}")
+def delete_person(person_id: int):
+    try:
+        db.delete_person(person_id)
+        return {"message": "Person deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Calculate memory associations
 class RelationRequest(BaseModel):
     target_name: str
