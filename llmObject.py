@@ -1,3 +1,4 @@
+import os
 from transformers import pipeline
 
 class llmObject:
@@ -6,10 +7,19 @@ class llmObject:
         self.pipe = None
 
     def load_model(self):
-        self.pipe = pipeline(
-            "text-generation",
-            model=self.path,
-        )
+        # Check if the model path exists
+        if not os.path.exists(self.path):
+            print(f"Model path {self.path} not found. Download/get the Model and place in same folder as root folder")
+            self.pipe = None
+        else:
+            self.pipe = pipeline(
+                "text-generation",
+                model=self.path,
+            )
 
     def communicate(self, question, max_tokens=100):
-        return self.pipe(question, max_new_tokens=max_tokens)[0]["generated_text"]
+        if self.pipe is None:
+            # Return the question itself if model is not loaded
+            return question
+        else:
+            return self.pipe(question, max_new_tokens=max_tokens)[0]["generated_text"]

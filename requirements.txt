@@ -1,5 +1,10 @@
 fastapi
 uvicorn
+pydantic
+sqlalchemy
 pandas
-sqlite3
+python-multipart
+axios
+cors
 transformers
+torch

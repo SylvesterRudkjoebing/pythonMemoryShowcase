@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/people/")
+      .get("http://backend:8000/people/")
       .then((response) => {
         setPeople(response.data.people);
       })
@@ -39,7 +39,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/calculate-associations/",
+        "http://backend:8000/calculate-associations/",
         {
           target_name: selectedPerson,
         }
@@ -61,7 +61,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/contextualize-associations/",
+        "http://backend:8000/contextualize-associations/",
         {
           associations: associations,
         }

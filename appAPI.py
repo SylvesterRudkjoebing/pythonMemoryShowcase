@@ -27,7 +27,7 @@ app = FastAPI(lifespan=lifespan)
 # Allow cross-origin requests from the frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allow frontend domain
+    allow_origins=["http://localhost:3000", "http://frontend:3000"],  # Allow frontend domain
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers

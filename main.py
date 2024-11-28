@@ -1,3 +1,4 @@
+from sqlalchemy import text
 import dbObject
 import bfsObject
 import llmObject
@@ -10,13 +11,13 @@ def main(db, bfs, llm):
     session = db.db_manager.get_session()
     try:
         # Example query to get person IDs
-        query_result = session.execute('SELECT id FROM people').fetchall()
+        query_result = session.execute(text('SELECT id FROM people')).fetchall()
         print([row[0] for row in query_result])
     finally:
         session.close()
 
     # Sets target friend name
-    friend_name = "Jens"
+    friend_name = "Vera"
 
     # Calculate how you met your friends
     relations = bfs.calculate(friend_name)

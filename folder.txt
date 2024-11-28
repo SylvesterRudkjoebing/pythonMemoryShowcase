@@ -1,0 +1,92 @@
+.
+├── MemoryDB.db
+├── README.md
+├── __pycache__
+│   ├── DbObject.cpython-39.pyc
+│   ├── app.cpython-39.pyc
+│   ├── appAPI.cpython-39.pyc
+│   ├── bfsLogic.cpython-39.pyc
+│   ├── bfsObject.cpython-39.pyc
+│   ├── dbOject.cpython-39.pyc
+│   ├── llmObject.cpython-39.pyc
+│   └── models.cpython-39.pyc
+├── appAPI.py
+├── backend.Dockerfile
+├── bfsObject.py
+├── data
+│   ├── README.md
+│   ├── __pycache__
+│   │   └── util.cpython-39.pyc
+│   ├── large
+│   │   ├── movies.csv
+│   │   ├── people.csv
+│   │   └── stars.csv
+│   └── small
+│       ├── events.csv
+│       ├── participations.csv
+│       └── people.csv
+├── dbObject.py
+├── docker-compose.yml
+├── folder.txt
+├── llmObject.py
+├── main.py
+├── memoryDjango
+│   ├── db.sqlite3
+│   ├── manage.py
+│   ├── memoryAPI
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── forms.py
+│   │   ├── migrations
+│   │   ├── models.py
+│   │   ├── static
+│   │   ├── templates
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   └── memoryDjango
+│       ├── __init__.py
+│       ├── __pycache__
+│       ├── asgi.py
+│       ├── settings.py
+│       ├── urls.py
+│       └── wsgi.py
+├── memoryReactFrontEnd
+│   ├── README.md
+│   ├── build
+│   │   ├── asset-manifest.json
+│   │   ├── favicon.ico
+│   │   ├── index.html
+│   │   ├── logo192.png
+│   │   ├── logo512.png
+│   │   ├── manifest.json
+│   │   ├── robots.txt
+│   │   └── static
+│   ├── frontend.Dockerfile
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   │   ├── favicon.ico
+│   │   ├── index.html
+│   │   ├── logo192.png
+│   │   ├── logo512.png
+│   │   ├── manifest.json
+│   │   └── robots.txt
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.js
+│   │   ├── App.test.js
+│   │   ├── AssociationsPath.js
+│   │   ├── Spinner.js
+│   │   ├── index.css
+│   │   ├── index.js
+│   │   ├── logo.svg
+│   │   ├── reportWebVitals.js
+│   │   └── setupTests.js
+│   └── tailwind.config.js
+├── models.py
+└── requirements.txt
