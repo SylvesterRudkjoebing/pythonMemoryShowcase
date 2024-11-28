@@ -9,7 +9,6 @@ class Node():
         self.parent = parent
         self.action = action
 
-
 class StackFrontier():
     """ Stack Frontier Class that represents states to be expanded during the search. The stack frontier uses a last-in first out ordering to determine the next state to expand when searching for solutions. This results in a Depth-First Search type algorithm """
 
@@ -228,9 +227,9 @@ class bfsObject:
                 person2 = self.people[path[i + 1][1]]["name"]
                 event = self.events[path[i + 1][0]]["event"]
                 if i == 0:
-                    relation = f"Du og {person2} mødtes {event}"
+                    relation = f"You og {person2} met {event}"
                 else:
-                    relation = f"{person1} introducerede dig til {person2} {event}"
+                    relation = f"{person1} introduced you to {person2} {event}"
                 print(relation)
                 relations.append(relation)
 

@@ -51,8 +51,8 @@ const AssociationsPath = ({ associations, selectedPerson, degrees }) => {
             ? "#34D399" // Green for the last node
             : "#4F46E5"; // Blue for other nodes
 
-        // Set the first node to say "Dig" regardless of the actual association name
-        const textToDisplay = index === 0 ? "Dig" : getTruncatedText(assoc.split(" ")[0]);
+        // Set the first node to say "You" regardless of the actual association name
+        const textToDisplay = index === 0 ? "You" : getTruncatedText(assoc.split(" ")[0]);
 
         return (
           <React.Fragment key={index}>
@@ -74,7 +74,7 @@ const AssociationsPath = ({ associations, selectedPerson, degrees }) => {
               fontWeight="bold"
               style={{ pointerEvents: "none" }}
             >
-              {textToDisplay} {/* Display "Dig" for the first node */}
+              {textToDisplay} {/* Display "You" for the first node */}
             </text>
             {index < fullAssociations.length - 1 && (
               <line

@@ -115,7 +115,7 @@ function App() {
           disabled={loading}
           className="w-full mt-4 p-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? "Associates..." : "Associate"}
+          {loading ? "Associating..." : "Associate"}
         </button>
 
         {/* Render AssociationsPath only after "Associer" is clicked */}

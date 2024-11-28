@@ -23,67 +23,73 @@ class MemoryDB:
         return pd.read_csv(file_path)
 
     def insert_dataframe(self, df, table_name, if_exists='replace'):
-        """
-        Inserts a DataFrame into a SQLite table using SQLAlchemy.
-        
-        :param df: DataFrame to insert
-        :param table_name: Name of the target table
-        :param if_exists: Behavior when the table exists ('fail', 'replace', 'append')
-        """
-        session = self.db_manager.get_session()
-        try:
-            # Clear existing data if replacing
-            if if_exists == 'replace':
-                if table_name == 'people':
-                    session.query(Person).delete()
-                elif table_name == 'events':
-                    session.query(Event).delete()
+            """
+            Inserts a DataFrame into a SQLite table using SQLAlchemy.
             
-            # Insert new data
-            for _, row in df.iterrows():
-                if table_name == 'people':
-                    person = Person(id=row['id'], name=row['name'], birth=row['birth'])
-                    session.add(person)
-                elif table_name == 'events':
-                    event = Event(id=row['id'], event=row['event'], year=row['year'])
-                    session.add(event)
-            
-            session.commit()
-            print(f"Data inserted into table '{table_name}' successfully.")
-        except Exception as e:
-            session.rollback()
-            print(f"Error inserting data: {e}")
-        finally:
-            session.close()
+            :param df: DataFrame to insert
+            :param table_name: Name of the target table
+            :param if_exists: Behavior when the table exists ('fail', 'replace', 'append')
+            """
+            session = self.db_manager.get_session()
+            try:
+                # Clear existing data if replacing
+                if if_exists == 'replace':
+                    if table_name == 'people':
+                        session.query(Person).delete()
+                    elif table_name == 'events':
+                        session.query(Event).delete()
+                
+                # Insert new data
+                for _, row in df.iterrows():
+                    if table_name == 'people':
+                        person = Person(id=row['id'], name=row['name'], birth=row['birth'])
+                        session.add(person)
+                    elif table_name == 'events':
+                        event = Event(id=row['id'], event=row['event'], year=row['year'])
+                        session.add(event)
+                
+                session.commit()
+                print(f"Data inserted into table '{table_name}' successfully.")
+            except Exception as e:
+                session.rollback()
+                print(f"Error inserting data: {e}")
+            finally:
+                session.close()
 
     def seedMemories(self):
-        """
-        Loads data from specified CSV files and inserts them into tables
-        using SQLAlchemy only if the tables are empty.
-        """
-        # Ensure tables are created
         self.db_manager.create_tables()
 
-        # Check if tables are empty before seeding
         session = self.db_manager.get_session()
         try:
             people_count = session.query(Person).count()
             events_count = session.query(Event).count()
+            participation_count = session.query(participations).count()  # Add this line
 
-            # Only seed if tables are empty
-            if people_count == 0 and events_count == 0:
+            if people_count == 0 and events_count == 0 and participation_count == 0:
                 file_paths = ['data/small/events.csv', 'data/small/people.csv', 'data/small/participations.csv']
 
                 for file_path in file_paths:
                     table_name = file_path.split('/')[-1].replace('.csv', '')
                     df = self.load_csv(file_path)
-                    self.insert_dataframe(df, table_name)
-
+                    
+                    if table_name == 'participations':
+                        # Add code to insert participations
+                        for _, row in df.iterrows():
+                            stmt = participations.insert().values(
+                                person_id=int(row['person_id']), 
+                                event_id=int(row['event_id'])
+                            )
+                            session.execute(stmt)
+                    else:
+                        self.insert_dataframe(df, table_name)
+                
+                session.commit()
                 print("Seeding completed.")
             else:
                 print("Database already contains data. Skipping seeding.")
         except Exception as e:
-            print(f"Error checking database contents: {e}")
+            session.rollback()
+            print(f"Error seeding database: {e}")
         finally:
             session.close()
 
@@ -184,3 +190,20 @@ class MemoryDB:
         self.conn.close()
         self.db_manager.close()
         print(f"Connection to database closed.")
+
+
+    def inspect_participations(self):
+        session = self.db_manager.get_session()
+        try:
+            # Get a few sample participations
+            parts = session.query(participations).limit(10).all()
+            print("Sample Participations:")
+            for part in parts:
+                print(f"Person ID: {part.person_id}, Event ID: {part.event_id}")
+
+            # Count total participations
+            count = session.query(participations).count()
+            print(f"\nTotal Participations: {count}")
+
+        finally:
+            session.close()
