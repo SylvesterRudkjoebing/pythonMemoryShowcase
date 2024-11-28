@@ -26,7 +26,7 @@ def main(db, bfs, llm):
     db.close()
 
     # Calculates and print reply based on input. Takes a very long time, since it's a local LLM, depending on your CPU/GPU.
-    print(llm.communicate("På 3 linjer, fortæl historien omkring følgende møder: " + ", ".join(relations), 5))
+    print(llm.communicate("In 3 lines, tell the story about these meetings: " + ", ".join(relations), 5))
 
 if __name__ == "__main__":
     # Dependency Injection: Create instances of dependencies first

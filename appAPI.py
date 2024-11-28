@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 import dbObject
 import bfsObject
 import llmObject
@@ -32,6 +33,11 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
 )
+
+# Add a route for the root ("/") to redirect to "/people/"
+@app.get("/")
+def redirect_root():
+    return RedirectResponse(url="/people/")
 
 # Get the list of all people from the database
 @app.get("/people/")
@@ -105,3 +111,28 @@ def contextualize_relations(request: LLMRequest):
     prompt = ", ".join(request.associations)
     response = llm.communicate(prompt, max_tokens=5)
     return {"summary": response}
+
+class EventCreateRequest(BaseModel):
+    id: int
+    event: str
+    year: int
+
+@app.post("/events/")
+def add_event(event: EventCreateRequest):
+    try:
+        db.create_event(event.id, event.event, event.year)
+        return {"message": "Event added successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class ParticipationCreateRequest(BaseModel):
+    personId: int
+    eventId: int
+
+@app.post("/participations/")
+def add_participation(participation: ParticipationCreateRequest):
+    try:
+        db.create_participation(participation.personId, participation.eventId)
+        return {"message": "Participation added successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

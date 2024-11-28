@@ -11,15 +11,19 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [hasClickedAssociate, setHasClickedAssociate] = useState(false); // Track if "Associer" was clicked
 
+  // Set the base URL dynamically based on the environment
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+
   useEffect(() => {
     axios
-      .get("http://backend:8000/people/")
+      .get(`${API_BASE_URL}/people/`)
       .then((response) => {
         setPeople(response.data.people);
       })
       .catch((error) => {
         console.error("There was an error fetching the people!", error);
       });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Reset graph and summary when a new friend is selected
@@ -39,7 +43,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "http://backend:8000/calculate-associations/",
+        `${API_BASE_URL}/calculate-associations/`,
         {
           target_name: selectedPerson,
         }
@@ -61,7 +65,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "http://backend:8000/contextualize-associations/",
+        `${API_BASE_URL}/contextualize-associations/`,
         {
           associations: associations,
         }
