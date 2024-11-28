@@ -40,7 +40,9 @@ You can run this project either locally or using Docker.
 ### Option 1: Running Locally
 
 1) Put the **Llama-3.2-1B** folder in the same directory as the project’s root folder.
-2) Open a terminal and run: `uvicorn appAPI:app --reload`.
+2) Open a terminal and run:
+   ```bash
+   `uvicorn appAPI:app --reload`.
 3) Open a terminal, navigate to the **memoryReactFrontEnd** folder, and run:
    ```bash
    npm run build
