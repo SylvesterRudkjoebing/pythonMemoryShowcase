@@ -83,7 +83,7 @@ function App() {
     <div className="App bg-gray-100 min-h-screen flex justify-center items-center pt-2 p-8">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:max-w-xl lg:max-w-m">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          Hvordan blev du venner med...
+          How did you become friends with...
         </h1>
 
         <div className="mb-4">
@@ -91,7 +91,7 @@ function App() {
             htmlFor="personSelect"
             className="block text-lg text-gray-700 font-medium mb-2"
           >
-            Vælg en ven:
+            Choose a friend:
           </label>
           <select
             id="personSelect"
@@ -100,7 +100,7 @@ function App() {
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {/* Only show the placeholder option when no person is selected */}
-            <option value="" disabled={selectedPerson !== ""}>Venner</option>
+            <option value="" disabled={selectedPerson !== ""}>Friends</option>
 
             {people.map((person, index) => (
               <option key={index} value={person}>
@@ -115,7 +115,7 @@ function App() {
           disabled={loading}
           className="w-full mt-4 p-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? "Associerer..." : "Associer"}
+          {loading ? "Associates..." : "Associate"}
         </button>
 
         {/* Render AssociationsPath only after "Associer" is clicked */}
@@ -132,7 +132,7 @@ function App() {
                 disabled={loading}
                 className="w-full mt-4 p-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 disabled:opacity-50"
               >
-                {loading ? "Husker..." : "Aktiver autobiografisk hukommelse"}
+                {loading ? "Recalling..." : "Activate autobiographical memory"}
               </button>
             )}
           </div>
