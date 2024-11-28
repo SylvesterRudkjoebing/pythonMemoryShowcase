@@ -48,7 +48,7 @@ You can run this project either locally or using Docker.
    npm run build
    npm start
   
-### Option 2: Running with Docker (Recommended)
+### Option 2: Running with Docker
 
 This project includes a Dockerized setup for easier deployment. Here's how you can run it using Docker:
 
