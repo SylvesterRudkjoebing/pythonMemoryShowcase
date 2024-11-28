@@ -141,7 +141,7 @@ function App() {
         {summary && (
           <div className="mt-6">
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              Du husker nu, at:
+            You remember now, that:
             </h3>
             <p className="text-gray-700">{summary + "..."}</p>
           </div>
