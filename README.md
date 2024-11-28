@@ -10,7 +10,7 @@ The core of this project is a **FastAPI-based RESTful API** that simulates human
 
 The result is a dynamic and interactive representation of how autobiographical memory functions.
 
-<img width="644" alt="User interface showing connection paths" src="https://github.com/user-attachments/assets/7550028d-b116-4aaa-98ae-3b15d5334b44">
+<img width="617" alt="Skærmbillede 2024-11-28 kl  17 35 07" src="https://github.com/user-attachments/assets/415e8f09-7926-4a56-ae2e-4375e7796471">
 
 ## Key Features
 
