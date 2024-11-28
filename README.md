@@ -56,14 +56,10 @@ This project includes a Dockerized setup for easier deployment. Here's how you c
 
 3) Put the **Llama-3.2-1B** folder in the same directory as the project’s root folder.
    
-4) **Build the Docker images** by running the following command in your terminal:
+4) **Build and run the Docker images** (both backend and frontend) by running the following command in your terminal:
    ```bash
-   docker-compose build
+   docker-compose up --build
 
-5) **Start the services** (both backend and frontend) using Docker Compose:
-   ```bash
-   docker-compose up
-
-6) **Access the application:**
+5) **Access the application:**
    - The FastAPI backend will be running on [http://localhost:8000](http://localhost:8000).
    - The React frontend will be accessible at [http://localhost:3000](http://localhost:3000).
