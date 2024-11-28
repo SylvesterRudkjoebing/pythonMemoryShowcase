@@ -1,8 +1,8 @@
 # Project Overview
 
-This repository demonstrates my ability to integrate Data Science with Full-Stack Development using Python and React.
+This repository demonstrates my ability to integrate **Data Science** with **Full-Stack Development** using Python and React.
 
-The core of this project is a FastAPI-based RESTful API that simulates human autobiographical memory. It leverages several key components:
+The core of this project is a **FastAPI-based RESTful API** that simulates human autobiographical memory. It leverages several key components:
 
 1. **Associations** – Implemented with a **breadth-first search (BFS)** algorithm to identify the shortest connection paths between friends.
 2. **Episodic Memory** – Stored in an "Events" database table, providing event descriptions to simulate memory recall.
@@ -21,7 +21,7 @@ The result is a dynamic and interactive representation of how autobiographical m
    The BFS algorithm, responsible for identifying the shortest path between friends, is encapsulated in `bfsObject.py`.
 
 ### 3. **Back-End**  
-   The back-end is built with **FastAPI**, which handles the data access layer using **SQLAlchemy ORM** and HTTP requests, enabling smooth communication with the front-end.
+   Built using **FastAPI**, the back-end handles data operations via **SQLAlchemy ORM** and processes HTTP requests, ensuring smooth communication with the front-end.
 
 ### 4. **Front-End**  
    The front-end is developed using **React** and styled with **Tailwind CSS**. A graph visually represents the connection paths between friends.
@@ -35,7 +35,7 @@ If you would like access to the Llama-3.2-1B model, feel free to reach out. The 
 
 ## How to Run
 
-You can run this project either locally or using Docker.
+This project can be run either locally or using Docker. If the Llama-3.2-1B model is not available, the program will automatically generate placeholder messages.
 
 ### Option 1: Running Locally
 

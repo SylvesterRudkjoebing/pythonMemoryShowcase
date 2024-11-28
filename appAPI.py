@@ -129,10 +129,20 @@ class ParticipationCreateRequest(BaseModel):
     personId: int
     eventId: int
 
-@app.post("/participations/")
-def add_participation(participation: ParticipationCreateRequest):
+# Delete Event endpoint
+@app.delete("/events/{event_id}")
+async def delete_event(event_id: int):
     try:
-        db.create_participation(participation.personId, participation.eventId)
-        return {"message": "Participation added successfully"}
+        db.delete_event(event_id)  # Calls the delete method in dbObject
+        return {"message": "Event deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Delete Participation endpoint
+@app.delete("/participations/")
+async def delete_participation(person_id: int, event_id: int):
+    try:
+        db.delete_participation(person_id, event_id)  # Calls the delete method in dbObject
+        return {"message": "Participation deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
