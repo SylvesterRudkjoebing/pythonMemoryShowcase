@@ -1,4 +1,5 @@
 import sys
+from models import Person, Event, DatabaseManager
 
 class Node():
     """ Node class that represents a state, its parent state and the action that when applied to the parent resulted in this state """
@@ -47,9 +48,9 @@ class QueueFrontier(StackFrontier):
 
 class bfsObject:
     def __init__(self, conn):
-
         # Accept the connection as a parameter
         self.conn = conn
+        self.db_manager = DatabaseManager()
 
         # Maps names to a set of corresponding person_ids
         self.names = {}
@@ -62,46 +63,39 @@ class bfsObject:
 
     def load_data(self, database):
         """
-        Load data from SQLite3 database into memory.
+        Load data from SQLite database into memory using SQLAlchemy.
         """
-        cursor = self.conn.cursor()
+        session = self.db_manager.get_session()
+        try:
+            # Load people
+            people = session.query(Person).all()
+            for person in people:
+                self.people[person.id] = {
+                    "name": person.name,
+                    "birth": person.birth,
+                    "events": {event.id for event in person.events}
+                }
+                name_lower = person.name.lower()
+                if name_lower not in self.names:
+                    self.names[name_lower] = {person.id}
+                else:
+                    self.names[name_lower].add(person.id)
 
-        # Load people
-        cursor.execute("SELECT id, name, birth FROM people")
-        for row in cursor.fetchall():
-            person_id, name, birth = row
-            self.people[person_id] = {
-                "name": name,
-                "birth": birth,
-                "events": set()
-            }
-            if name.lower() not in self.names:
-                self.names[name.lower()] = {person_id}
-            else:
-                self.names[name.lower()].add(person_id)
-
-        # Load events
-        cursor.execute("SELECT id, event, year FROM events")
-        for row in cursor.fetchall():
-            event_id, event, year = row
-            self.events[event_id] = {
-                "event": event,
-                "year": year,
-                "participations": set()
-            }
-
-        # Load participations (relationships between people and events)
-        cursor.execute("SELECT person_id, event_id FROM participations")
-        for row in cursor.fetchall():
-            person_id, event_id = row
-            if person_id in self.people and event_id in self.events:
-                self.people[person_id]["events"].add(event_id)
-                self.events[event_id]["participations"].add(person_id)
+            # Load events
+            events = session.query(Event).all()
+            for event in events:
+                self.events[event.id] = {
+                    "event": event.event,
+                    "year": event.year,
+                    "participations": {person.id for person in event.participants}
+                }
+        finally:
+            session.close()
 
 
     def person_id_for_name(self, name):
         """
-        Returns the IMDB id for a person's name,
+        Returns the person id for a person's name,
         resolving ambiguities as needed.
         """
         person_ids = list(self.names.get(name.lower(), set()))
@@ -109,18 +103,21 @@ class bfsObject:
             return None
         elif len(person_ids) > 1:
             print(f"Which '{name}'?")
-            for person_id in person_ids:
-                person = self.people[person_id]
-                name = person["name"]
-                birth = person["birth"]
-                print(f"ID: {person_id}, Name: {name}, Birth: {birth}")
+            session = self.db_manager.get_session()
             try:
-                person_id = input("Intended Person ID: ")
-                if person_id in person_ids:
-                    return person_id
-            except ValueError:
-                pass
-            return None
+                for person_id in person_ids:
+                    person = session.query(Person).filter(Person.id == person_id).first()
+                    print(f"ID: {person.id}, Name: {person.name}, Birth: {person.birth}")
+                
+                try:
+                    person_id = input("Intended Person ID: ")
+                    if person_id in person_ids:
+                        return int(person_id)
+                except ValueError:
+                    pass
+                return None
+            finally:
+                session.close()
         else:
             return person_ids[0]
 

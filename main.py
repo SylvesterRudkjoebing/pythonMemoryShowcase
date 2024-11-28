@@ -6,9 +6,14 @@ def main(db, bfs, llm):
     # Seed the database with CSV data
     db.seedMemories()
 
-    # Query example
-    query_result = db.query('SELECT id FROM people')
-    print(query_result)
+    # Query example using SQLAlchemy
+    session = db.db_manager.get_session()
+    try:
+        # Example query to get person IDs
+        query_result = session.execute('SELECT id FROM people').fetchall()
+        print([row[0] for row in query_result])
+    finally:
+        session.close()
 
     # Sets target friend name
     friend_name = "Jens"

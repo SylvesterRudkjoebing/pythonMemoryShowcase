@@ -1,17 +1,17 @@
-import sqlite3
 import pandas as pd
+from models import DatabaseManager, Person, Event, participations
 
 class MemoryDB:
     def __init__(self, db_filename="memoryDB.db"):
         """
-        Connects to a SQLite database file.
-        If the database doesn't exist, it will be created.
+        Initialize SQLAlchemy database connection.
         
-        :param db_filename: Name of the SQLite database file (default is 'MemoryDB.db')
+        :param db_filename: Name of the SQLite database file
         """
-        self.db_filename = db_filename
-        self.conn = sqlite3.connect(self.db_filename, check_same_thread=False)  # Connect to the SQLite database file
-        print(f"Connected to SQLite database '{self.db_filename}'.")
+        database_url = f'sqlite:///{db_filename}'
+        self.db_manager = DatabaseManager(database_url)
+        self.conn = self.db_manager.engine.connect()
+        print(f"Connected to SQLite database '{db_filename}'.")
 
     def load_csv(self, file_path):
         """
@@ -24,106 +24,151 @@ class MemoryDB:
 
     def insert_dataframe(self, df, table_name, if_exists='replace'):
         """
-        Inserts a DataFrame into a SQLite table.
+        Inserts a DataFrame into a SQLite table using SQLAlchemy.
         
         :param df: DataFrame to insert
-        :param table_name: Name of the target table in SQLite
+        :param table_name: Name of the target table
         :param if_exists: Behavior when the table exists ('fail', 'replace', 'append')
         """
-        df.to_sql(table_name, self.conn, if_exists=if_exists, index=False)
-        print(f"Data inserted into table '{table_name}' successfully.")
-
-    def table_exists(self, table_name):
-        """
-        Checks if a table exists in the SQLite database.
-        
-        :param table_name: The name of the table to check
-        :return: True if the table exists, False otherwise
-        """
-        query = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';"
-        result = self.conn.execute(query).fetchone()
-        return result is not None
+        session = self.db_manager.get_session()
+        try:
+            # Clear existing data if replacing
+            if if_exists == 'replace':
+                if table_name == 'people':
+                    session.query(Person).delete()
+                elif table_name == 'events':
+                    session.query(Event).delete()
+            
+            # Insert new data
+            for _, row in df.iterrows():
+                if table_name == 'people':
+                    person = Person(id=row['id'], name=row['name'], birth=row['birth'])
+                    session.add(person)
+                elif table_name == 'events':
+                    event = Event(id=row['id'], event=row['event'], year=row['year'])
+                    session.add(event)
+            
+            session.commit()
+            print(f"Data inserted into table '{table_name}' successfully.")
+        except Exception as e:
+            session.rollback()
+            print(f"Error inserting data: {e}")
+        finally:
+            session.close()
 
     def seedMemories(self):
         """
-        Loads data from specified CSV files and inserts them as tables
-        in the SQLite database, only if the table does not already exist.
+        Loads data from specified CSV files and inserts them into tables
+        using SQLAlchemy only if the tables are empty.
         """
-        file_paths = ['data/small/events.csv', 'data/small/people.csv', 'data/small/participations.csv']
+        # Ensure tables are created
+        self.db_manager.create_tables()
 
-        for file_path in file_paths:
-            # Extract the base name (e.g., 'events', 'people', or 'participations') without the path or file extension
-            table_name = file_path.split('/')[-1].replace('.csv', '')
+        # Check if tables are empty before seeding
+        session = self.db_manager.get_session()
+        try:
+            people_count = session.query(Person).count()
+            events_count = session.query(Event).count()
 
-            # Check if the table already exists in the database
-            if not self.table_exists(table_name):
-                print(f"Table '{table_name}' does not exist. Inserting data...")
-                # Load CSV into DataFrame and insert into the SQLite table
-                df = self.load_csv(file_path)
-                self.insert_dataframe(df, table_name)
+            # Only seed if tables are empty
+            if people_count == 0 and events_count == 0:
+                file_paths = ['data/small/events.csv', 'data/small/people.csv', 'data/small/participations.csv']
+
+                for file_path in file_paths:
+                    table_name = file_path.split('/')[-1].replace('.csv', '')
+                    df = self.load_csv(file_path)
+                    self.insert_dataframe(df, table_name)
+
+                print("Seeding completed.")
             else:
-                print(f"Table '{table_name}' already exists. Skipping data insertion.")
-
-        print("Seeding completed.")
+                print("Database already contains data. Skipping seeding.")
+        except Exception as e:
+            print(f"Error checking database contents: {e}")
+        finally:
+            session.close()
 
     def get_all_people(self):
         """
-        Fetch all people's names from the 'people' table.
+        Fetch all people's names using SQLAlchemy.
         
-        :return: List of names from the rows of the 'people' table
+        :return: List of names from the people table
         """
-        query = "SELECT name FROM people"
-        rows = self.conn.execute(query).fetchall()
-        return [{"name": row[0]} for row in rows]
-    
+        session = self.db_manager.get_session()
+        try:
+            people = session.query(Person).all()
+            return [{"name": person.name} for person in people]
+        finally:
+            session.close()
+
     def create_person(self, id, name, birth):
         """
-        Adds a new person to the 'people' table.
+        Adds a new person to the database using SQLAlchemy.
         """
-        query = "INSERT INTO people (id, name, birth) VALUES (?, ?, ?)"
-        self.conn.execute(query, (id, name, birth))
-        self.conn.commit()
-        print(f"Added person: {id} {name} ({birth})")
+        session = self.db_manager.get_session()
+        try:
+            person = Person(id=id, name=name, birth=birth)
+            session.add(person)
+            session.commit()
+            print(f"Added person: {id} {name} ({birth})")
+        except Exception as e:
+            session.rollback()
+            print(f"Error adding person: {e}")
+        finally:
+            session.close()
 
     def get_person(self, person_id):
         """
-        Fetches a person's details by ID.
+        Fetches a person's details by ID using SQLAlchemy.
         """
-        query = "SELECT * FROM people WHERE id = ?"
-        result = self.conn.execute(query, (person_id,)).fetchone()
-        if result:
-            return {"id": result[0], "name": result[1], "birth": result[2]}
-        return None
-    
+        session = self.db_manager.get_session()
+        try:
+            person = session.query(Person).filter(Person.id == person_id).first()
+            if person:
+                return {"id": person.id, "name": person.name, "birth": person.birth}
+            return None
+        finally:
+            session.close()
+
     def update_person(self, person_id, name=None, birth=None):
         """
-        Updates a person's details in the database.
+        Updates a person's details in the database using SQLAlchemy.
         """
-        updates = []
-        values = []
-        
-        if name:
-            updates.append("name = ?")
-            values.append(name)
-        if birth:
-            updates.append("birth = ?")
-            values.append(birth)
-        
-        if updates:
-            values.append(person_id)
-            query = f"UPDATE people SET {', '.join(updates)} WHERE id = ?"
-            self.conn.execute(query, values)
-            self.conn.commit()
-            print(f"Updated person with ID: {person_id}")
+        session = self.db_manager.get_session()
+        try:
+            person = session.query(Person).filter(Person.id == person_id).first()
+            if person:
+                if name:
+                    person.name = name
+                if birth:
+                    person.birth = birth
+                session.commit()
+                print(f"Updated person with ID: {person_id}")
+            else:
+                print(f"No person found with ID: {person_id}")
+        except Exception as e:
+            session.rollback()
+            print(f"Error updating person: {e}")
+        finally:
+            session.close()
 
     def delete_person(self, person_id):
         """
-        Deletes a person from the database by ID.
+        Deletes a person from the database using SQLAlchemy.
         """
-        query = "DELETE FROM people WHERE id = ?"
-        self.conn.execute(query, (person_id,))
-        self.conn.commit()
-        print(f"Deleted person with ID: {person_id}")
+        session = self.db_manager.get_session()
+        try:
+            person = session.query(Person).filter(Person.id == person_id).first()
+            if person:
+                session.delete(person)
+                session.commit()
+                print(f"Deleted person with ID: {person_id}")
+            else:
+                print(f"No person found with ID: {person_id}")
+        except Exception as e:
+            session.rollback()
+            print(f"Error deleting person: {e}")
+        finally:
+            session.close()
 
     def query(self, query):
         """
@@ -137,4 +182,5 @@ class MemoryDB:
     def close(self):
         """Closes the connection to the SQLite database."""
         self.conn.close()
-        print(f"Connection to '{self.db_filename}' closed.")
+        self.db_manager.close()
+        print(f"Connection to database closed.")
